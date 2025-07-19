@@ -50,6 +50,9 @@ Setup
    - apiserver=`kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'`
    - python3 provider-kubeconfig.py -s $apiserver -x cluster1 create $KUBEPLUS_NS
    - deactivate
+   - helm install kubeplus "https://github.com/cloud-ark/operatorcharts/blob/master/kubeplus-chart-4.2.0.tgz?raw=true" --kubeconfig=kubeplus-saas-provider.json -n $KUBEPLUS_NS
+until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for KubePlus to start.."; sleep 1; done
+
 
 8) Build container and push to GCR
    - Update build.sh and then
@@ -58,8 +61,8 @@ Setup
 9) Create the Greeting Kind:
    1. Update greetings-service-composition.yaml (see assignment requirements)
    2. kubectl upload chart <chart-tgz> kubeplus-saas-provider.json
-   2. kubectl create -f greetings-service-composition.yaml --kubeconfig=kubeplus-saas-provider.json
-   3. Verify that the Kind has been registered
+   3. kubectl create -f greetings-service-composition.yaml --kubeconfig=kubeplus-saas-provider.json
+   4. Verify that the Kind has been registered
       - kubectl get resourcecompositions
       - kubectl get crds
 
