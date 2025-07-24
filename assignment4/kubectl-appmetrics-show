@@ -1,7 +1,7 @@
 #!/bin/bash
 
-if (( $# < 3 )); then
-  echo "kubectl appmetrics show <kind> <instance> <kubeconfig>"
+if (( $# < 4 )); then
+  echo "kubectl appmetrics show <kind> <instance> <namespace-in-which-the-app-is-created> <kubeconfig>"
   exit 0
 fi
 
@@ -9,10 +9,11 @@ fi
 # Take following inputs in order
 # kind
 # instance
+# namespace
 # kubeconfig
 
 
-URL=`kubectl appurl $kind $instance -k $kubeconfig`
+URL=`kubectl appurl $kind $instance $namespace -k $kubeconfig`
 URL=$(echo $URL | sed "s/[][]//g" | sed "s/'//g")
 echo $URL 
 

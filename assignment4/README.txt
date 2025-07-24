@@ -57,6 +57,10 @@ until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for K
 8) Build container and push to GCR
    - Update build.sh and then
    - ./build.sh
+     - If you are Mac with ARM processor then the build.sh by default will build image for ARM architecture
+       The GKE cluster, by default create x86 worker nodes. There is mismatch in the processor architecture of the image.
+       This leads to "ErrImagePull" when you do "kubectl describe pod <pod-name> -n greetings1".
+       The way to solve this is to add "--platform=linux/x86" flag (verify this) to the "docker build": 
 
 9) Create the Greeting Kind:
    1. Update greetings-service-composition.yaml (see assignment requirements)
@@ -81,8 +85,8 @@ until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for K
     2. kubectl get ns
 
 14) Access metrics endpoint:
-    1. kubectl appmetrics show Greeting greetings1 kubeplus-saas-provider.json
-    2. kubectl appmetrics show Greeting greetings2 kubeplus-saas-provider.json
+    1. kubectl appmetrics show Greeting greetings1 default kubeplus-saas-provider.json
+    2. kubectl appmetrics show Greeting greetings2 default kubeplus-saas-provider.json
 
 15) Check and note the resources created by KubePlus:
     1. kubectl appresources Greeting greetings1 -k kubeplus-saas-provider.json
