@@ -5,5 +5,5 @@ ADD requirements.txt /src/requirements.txt
 RUN cd /src; pip install -r requirements.txt
 ADD . /src
 EXPOSE 5001
-ENV GREETING "Summer is here."
+ENV GREETING "Fall is here."
 CMD ["python3", "/src/application.py"]
