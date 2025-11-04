@@ -35,11 +35,15 @@ Setup
    -> Hit Save
 
 6) Download KubePlus kubectl plugins and setup the Path
-   - wget https://github.com/cloud-ark/kubeplus/raw/master/kubeplus-kubectl-plugins.tar.gz
-   - tar -zxvf kubeplus-kubectl-plugins.tar.gz
-   - export KUBEPLUS_HOME=`pwd`
-   - export PATH=$KUBEPLUS_HOME/plugins:$PATH
-   - kubectl kubeplus commands 
+   - Go to https://github.com/cloud-ark/kubeplus/releases
+   - Click "Assets" -> right click kubeplus-kubectl-plugins-v*.tar.gz and copy the link address
+   - wget "plugin link from above step"
+   - mkdir plugins
+   - mv kubeplus-kubectl-plugins-v*.tar.gz plugins/.
+   - cd plugins
+   - tar -zxvf kubeplus-kubectl-plugins-v*.tar.gz
+   - export PATH=`pwd`:$PATH
+   - kubectl kubeplus commands
 
 7) Deploy KubePlus
    - KUBEPLUS_NS=default
