@@ -1,16 +1,18 @@
 from flask import Flask, request
 import os
+
 app = Flask(__name__)
 
+# This is the "/" endpoint
 @app.route("/")
 def hello():
     return "Hello World!"
 
-# Add "greetings" route
+# Add "greetings" endpoint
 # Read "GREETING" environment variable and return its value
 
 
-# Add "listcontents" route
+# Add "listcontents" endpoint
 # Read contents of "hostfolder" and return the contents
 
 

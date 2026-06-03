@@ -1,10 +1,10 @@
 FROM ubuntu:14.04 
 RUN apt-get update -y \ 
-    && apt-get install -y python-setuptools python3-pip
+    && apt-get install -y python-setuptools python3-pip curl
 ADD requirements.txt /src/requirements.txt
 RUN cd /src; pip install -r requirements.txt
 ADD . /src
 EXPOSE 5000 							
 
-# Add environment variable GREETING with value "Fall is here."
+# Add environment variable GREETING with value "Summer is here!"
 CMD ["python3", "/src/application.py"]
