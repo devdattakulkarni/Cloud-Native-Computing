@@ -19,13 +19,14 @@ Do this step from any terminal that you will use
 
 Build container:
 -----------------
-Update build.sh and then build the container using:
-./build.sh
+
+# TODO : Requirement 1
+docker build -t <> .
 
 
 Deploy application to Minikube:
 -------------------------------
-kubectl create -f greetings.yaml
+kubectl apply -f greetings.yaml
 
 
 
