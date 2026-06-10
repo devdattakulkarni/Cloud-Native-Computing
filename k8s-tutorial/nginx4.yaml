@@ -1,0 +1,19 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nginx-pod4
+  labels:
+    app: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:latest
+    ports:
+    - containerPort: 80
+    volumeMounts:
+    - name: named-volume-1
+      mountPath: /etc
+  volumes:
+  - name: named-volume-1
+    configMap:
+      name: non-existent-configmap
