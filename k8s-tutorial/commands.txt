@@ -47,4 +47,8 @@ Expose the Pod to the outside world
     kubectl create -f nginx-service.yaml
 
 Get the Pods's URL
-    minikube service nginx-service
+    minikube service nginx-service --url
+
+Understand Spec for a kind
+    kubectl explain <kind>.spec
+

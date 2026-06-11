@@ -11,10 +11,16 @@ minikube start
 
 Connect docker CLI on Host to Docker Daemon inside Minikube
 ------------------------------------------------------------
-eval $(minikube docker-env)
-docker images
+Linux/MacOS:
+    eval $(minikube docker-env)
 
-Do this step from any terminal that you will use
+Windows (Powershell):
+    minikube docker-env --shell powershell | Invoke-Expression
+
+Verify:
+    docker images
+
+Do above steps from any terminal that you will use
 
 
 Build container:
@@ -29,14 +35,28 @@ Deploy application to Minikube:
 kubectl apply -f greetings.yaml
 
 
-
 Try app endpoints:
 ------------------
-MINIKUBE_IP=$(minikube ip)
-curl http://$MINIKUBE_IP:32767/
-curl http://$MINIKUBE_IP:32767/greetings
-curl http://$MINIKUBE_IP:32767/listcontents
-curl http://$MINIKUBE_IP:32767/getk8sobjects
+    Linux:
+        MINIKUBE_IP=$(minikube ip)
+        URL=http://$MINIKUBE_IP:32767
+
+    MacOS/Windows:
+        Use either option 1 or option 2.
+        Option 2 is better as the URL will not change even when you redeploy the application.
+        Option 1:
+            minikube service greetings --url
+            URL=<output from previous command>
+        Option 2:
+            Terminal 1:
+                kubectl port-forward service/greetings 8080:80
+            Terminal 2:
+                URL="http://localhost:8080"
+
+    curl $URL
+    curl $URL/greetings
+    curl $URL/listcontents
+    curl $URL/getk8sobjects
 
 
 See Kubernetes resources:

@@ -18,14 +18,11 @@ Run container:
 # 4. Pass your image tag from the build section above
 # 5. Map host port 5000 to container port 5001
 
-docker run -p 5000:5000 -d --name assignment1 <> 
+docker run -p 5000:5001 -d --name assignment1 <>
 
 
 Try the application:
 ----------------------
-
-When you modify the application to use port 5001,
-change the port in the commands below.
 
 curl http://localhost:5000/
 curl http://localhost:5000/greetings
