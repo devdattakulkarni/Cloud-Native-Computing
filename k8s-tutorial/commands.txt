@@ -1,0 +1,50 @@
+Start a minikube cluster
+    minikube start
+
+See all api-resources / kinds in the cluster
+    kubectl api-resources
+
+See all nodes in the cluster
+    kubectl get nodes
+
+See all namespaces 
+    kubectl get namespaces
+
+See Pods in a namespace
+    kubectl get pods -n <namespace>
+
+See Pods in all namespaces
+    kubectl get pods -A 
+
+See which cluster kubectl is connected to:
+    kubectl config get-contexts
+
+See verbose output
+    kubectl get ns -v6
+    kubectl get ns -v10
+
+Create a resource
+    kubectl create -f nginx1.yaml
+
+Use labels to search for Pods
+    kubectl get pods -lapp=nginx
+    kubectl get pods -lapp=nginx,type=lb
+    kubectl get pods -lapp=nginx,type=lb,type1=abc
+
+Update a resource
+    kubectl apply -f nginx1.yaml
+
+Delete a resource
+    kubectl delete -f nginx1.yaml
+
+Describe a resource
+    kubectl describe pod <podname> -n <namespace>
+
+Get JSON output
+    kubectl get pod <podname> -n <namespace> -o json
+
+Expose the Pod to the outside world
+    kubectl create -f nginx-service.yaml
+
+Get the Pods's URL
+    minikube service nginx-service
