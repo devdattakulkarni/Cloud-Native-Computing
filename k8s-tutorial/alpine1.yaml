@@ -1,15 +1,14 @@
 kind: Pod
 apiVersion: v1
 metadata:
-  name: nginx-pod3
+  name: alpine1
   labels:
-    app: nginx
+    app: alpine
 spec:
   containers:
-  - name: nginx
-    image: nginx:latest
-    ports:
-    - containerPort: 80
+  - name: alpine
+    image: alpine
+    command: ["sleep", "36000"]
   volumes:
   - name: named-volume-1
     configMap:

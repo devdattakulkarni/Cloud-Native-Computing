@@ -20,7 +20,7 @@ Windows (Powershell):
 Verify:
     docker images
 
-Do above steps from any terminal that you will use
+Run above steps from any terminal that you will use
 
 
 Build container:
@@ -43,7 +43,7 @@ Try app endpoints:
 
     MacOS/Windows:
         Use either option 1 or option 2.
-        Option 2 is better as the URL will not change even when you redeploy the application.
+        Option 2 is better as the URL will not change even when you re-deploy the application.
         Option 1:
             minikube service greetings --url
             URL=<output from previous command>

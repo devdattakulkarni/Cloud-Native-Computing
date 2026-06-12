@@ -1,0 +1,30 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: alpine3
+  labels:
+    app: alpine
+spec:
+  containers:
+  - name: alpine
+    image: alpine
+    command: ["sleep", "36000"]
+    volumeMounts:
+    - name: named-volume-1
+      mountPath: /hostfolder
+  volumes:
+  - name: named-volume-1
+    configMap:
+      name: greetings-config
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: greetings-config
+data:
+  filenames.txt: |
+    application.py
+    Dockerfile
+    build.sh
+    requirements.txt
+    greetings.yaml
