@@ -51,4 +51,4 @@ Get the Pods's URL
 
 Understand Spec for a kind
     kubectl explain <kind>.spec
-
+    e.g.: kubectl explain Pod.spec.container.....

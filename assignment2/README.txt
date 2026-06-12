@@ -47,11 +47,16 @@ Try app endpoints:
         Option 1:
             minikube service greetings --url
             URL=<output from previous command>
+            On Windows+Powershell
+            $URL=<output from previous command>
         Option 2:
             Terminal 1:
                 kubectl port-forward service/greetings 8080:80
             Terminal 2:
                 URL="http://localhost:8080"
+        
+            On Windows+Powershell, set the variable like this:
+            $URL = "http://localhost:8080"
 
     curl $URL
     curl $URL/greetings
