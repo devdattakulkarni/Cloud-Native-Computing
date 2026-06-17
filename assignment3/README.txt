@@ -20,27 +20,48 @@ Do this step from any terminal that you will use
 
 Build container:
 -----------------
-Update build.sh and then
-./build.sh
+
+# TODO : Requirement 1.1
+docker build -t <> .
 
 
 Install the greetings helm chart:
 ---------------------------------
-helm install greetings1 -n greetings1 --create-namespace ./greetings-chart --set NODE_PORT=32765 --set GREETING="This is greetings1"
-helm install greetings2 -n greetings2 --create-namespace ./greetings-chart --set NODE_PORT=32764 --set GREETING="This is greetings2"
+helm install greetings1 -n greetings1 --create-namespace ./greetings-chart --set nodePort=32764 --set greeting="This is greetings1"
+helm install greetings2 -n greetings2 --create-namespace ./greetings-chart --set nodePort=32765 --set greeting="This is greetings2"
 
+Check helm releases:
+--------------------
+helm list
 
-Query application endpoints:
-----------------------------
-URL1=`minikube service greetings -n greetings1 --url`
-curl $URL1/greetings
-curl $URL1/listcontents
-curl $URL1/getk8sobjects
+Try app endpoints:
+------------------
+    Linux:
+        MINIKUBE_IP=$(minikube ip)
+        URL1=http://$MINIKUBE_IP:32764
+        URL2=http://$MINIKUBE_IP:32765
 
-URL2=`minikube service greetings -n greetings2 --url`
-curl $URL2/greetings
-curl $URL2/listcontents
-curl $URL2/getk8sobjects
+    MacOS/Windows:
+        Use either option 1 or option 2.
+        Option 2 is better as the URL will not change even when you re-deploy the application.
+        Option 1:
+            minikube service greetings --url
+            URL=<output from previous command>
+            On Windows+Powershell
+            $URL=<output from previous command>
+        Option 2:
+            Terminal 1:
+                kubectl port-forward service/greetings 8080:80
+            Terminal 2:
+                URL="http://localhost:8080"
+        
+            On Windows+Powershell, set the variable like this:
+            $URL = "http://localhost:8080"
+
+    curl $URL
+    curl $URL/greetings
+    curl $URL/listcontents
+    curl $URL/getk8sobjects
 
 
 Delete Helm releases:

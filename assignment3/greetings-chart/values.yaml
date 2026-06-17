@@ -1,4 +1,4 @@
-# Requirement 2.0
-IMAGE: ""
+# Requirement 2.1
+image: ""
 
-# Add variables (Requirement 2.1)
+# Add variables (Requirement 2.2)

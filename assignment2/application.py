@@ -20,7 +20,6 @@ def greetings():
 
 @app.route("/listcontents")
 def listcontents():
-    contents = os.listdir("/hostfolder")
     fp = open("/hostfolder/filenames.txt","r")
     lines = fp.readlines()
     return lines
