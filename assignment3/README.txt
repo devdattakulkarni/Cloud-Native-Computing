@@ -9,13 +9,18 @@ Start Minikube cluster
 ----------------------
 minikube start
 
-
 Connect docker CLI on Host to Docker Daemon inside Minikube
 ------------------------------------------------------------
-eval $(minikube docker-env)
-docker images
+Linux/MacOS:
+    eval $(minikube docker-env)
 
-Do this step from any terminal that you will use
+Windows (Powershell):
+    minikube docker-env --shell powershell | Invoke-Expression
+
+Verify:
+    docker images
+
+Run above steps from any terminal that you will use
 
 
 Build container:
@@ -45,24 +50,40 @@ Try app endpoints:
         Use either option 1 or option 2.
         Option 2 is better as the URL will not change even when you re-deploy the application.
         Option 1:
-            minikube service greetings --url
-            URL=<output from previous command>
+            minikube service greetings -n greetings1 --url
+            URL1=<output from previous command>
             On Windows+Powershell
-            $URL=<output from previous command>
+            $URL1=<output from previous command>
+
+            minikube service greetings -n greetings2 --url
+            URL2=<output from previous command>
+            On Windows+Powershell
+            $URL2=<output from previous command>
+
         Option 2:
             Terminal 1:
-                kubectl port-forward service/greetings 8080:80
+                kubectl port-forward -n greeting1 service/greetings 8080:80
             Terminal 2:
-                URL="http://localhost:8080"
-        
+                URL1="http://localhost:8080"
             On Windows+Powershell, set the variable like this:
-            $URL = "http://localhost:8080"
+            $URL1 = "http://localhost:8080"
 
-    curl $URL
-    curl $URL/greetings
-    curl $URL/listcontents
-    curl $URL/getk8sobjects
+            Terminal 3:
+                kubectl port-forward -n greeting2 service/greetings 8081:80
+            Terminal 4:
+                URL2="http://localhost:8081"
+            On Windows+Powershell, set the variable like this:
+            $URL2 = "http://localhost:8081"
 
+    curl $URL1
+    curl $URL1/greetings
+    curl $URL1/listcontents
+    curl $URL1/getk8sobjects
+
+    curl $URL2
+    curl $URL2/greetings
+    curl $URL2/listcontents
+    curl $URL2/getk8sobjects
 
 Delete Helm releases:
 ----------------------
