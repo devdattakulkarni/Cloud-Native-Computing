@@ -32,8 +32,8 @@ docker build -t <> .
 
 Install the greetings helm chart:
 ---------------------------------
-helm install greetings1 -n greetings1 --create-namespace ./greetings-chart --set nodePort=32764 --set greeting="This is greetings1"
-helm install greetings2 -n greetings2 --create-namespace ./greetings-chart --set nodePort=32765 --set greeting="This is greetings2"
+helm install greetings1 -n greetings1 --create-namespace ./greetings-chart --set nodePort=32764 --set greeting="This is greetings1" --set replicas=1
+helm install greetings2 -n greetings2 --create-namespace ./greetings-chart --set nodePort=32765 --set greeting="This is greetings2" --set replicas=1
 
 Check helm releases:
 --------------------
@@ -62,14 +62,14 @@ Try app endpoints:
 
         Option 2:
             Terminal 1:
-                kubectl port-forward -n greeting1 service/greetings 8080:80
+                kubectl port-forward -n greetings1 service/greetings 8080:80
             Terminal 2:
                 URL1="http://localhost:8080"
             On Windows+Powershell, set the variable like this:
             $URL1 = "http://localhost:8080"
 
             Terminal 3:
-                kubectl port-forward -n greeting2 service/greetings 8081:80
+                kubectl port-forward -n greetings2 service/greetings 8081:80
             Terminal 4:
                 URL2="http://localhost:8081"
             On Windows+Powershell, set the variable like this:
@@ -90,6 +90,8 @@ Delete Helm releases:
 helm delete greetings1 -n greetings1
 helm delete greetings2 -n greetings2
 
+
+--- Ignore the plugins; NOT needed for the assignment ---
 
 Use the plugins:
 -----------------
