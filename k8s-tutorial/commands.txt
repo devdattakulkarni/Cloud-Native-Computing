@@ -55,3 +55,37 @@ Understand Spec for a kind
 
 Exec into a Pod
     kubectl exec -it <Pod name> -- /bin/bash
+
+Run Prometheus on your machine as a container and scrape Kubernetes metrics from your minikube cluster 
+    docker run -d --name prometheus \
+        --network minikube \
+        -p 9090:9090 \
+        -v ./monitoring/prometheus-k8s.yml:/etc/prometheus/prometheus.yml \
+        -v ~/.minikube:/minikube-certs:ro \
+        prom/prometheus
+
+Deploy an instrumented application and pull metrics in Prometheus
+    Terminal 1: 
+    - Connect your Docker CLI to Minikube Docker daemon
+    - Instrument your application with Prometheus Counter (name: custom_request_count)
+    - Deploy your instrumented application (use NodePort type of Service with Port 32767)
+    - Port forward localhost port 8081 to port 80 of your app's Service
+        - kubectl port-forward service/<app-service> 8081:80 
+   
+    Terminal 2:
+    - Run Prometheus as a Docker container on the minikube network. Make sure to use <minikube ip>:32767 as the target in prometheus.yml
+    docker run -d --name prometheus --network minikube -p 9090:9090 -v ./<your-prometheus.yml>:/etc/prometheus/prometheus.yml prom/prometheus
+
+    Access application endpoints 
+    - use curl from terminal 3 or 
+    - use browser
+
+    Access Prometheus:
+    - In browswer, open http://localhost:9090
+    - Go to Status -> Target health and verify that your configured Target is up (green)
+    - Go to Query -> check custom_request_count_total metric
+      - Type "custom_request_count_total" in the Query box and hit Execute
+      - Check the Graph view
+    
+    Experiment:
+    - As you hit the application endpoints, Prometheus Graph view should show increasing graph
