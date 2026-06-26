@@ -89,3 +89,23 @@ Deploy an instrumented application and pull metrics in Prometheus
     
     Experiment:
     - As you hit the application endpoints, Prometheus Graph view should show increasing graph
+
+Logging:
+    cd logging
+    docker compose up
+    kubectl create -f fluentd-configmap.yaml
+    kubectl create -f daemonset.yaml
+    Access opensearch: http://localhost:5601
+    -> Management -> Index Management -> Indexes
+       -> Create Index
+    -> Discover -> Choose the created index from dropdown
+       If index does not show in the dropdown, run the following command and then refresh the page:
+       curl -X POST "http://localhost:5601/api/saved_objects/index-pattern/k8s-logs" \
+         -H "osd-xsrf: true" \
+         -H "Content-Type: application/json" \
+            -d '{
+                "attributes": {
+                "title": "k8s-logs-*",
+                "timeFieldName": "@timestamp"
+                }
+            }'
