@@ -24,7 +24,7 @@ Setup
    - https://console.cloud.google.com/apis/library/browse?filter=category:compute&project=<your-project-name>
 
 4) Create GKE cluster
-   - ./create-gke-cluster.sh <gcp-project-id> cluster1 
+   - ./create-gke-cluster.sh <gcp-project-id> cluster1
 
 5) Once the cluster is created, you can open traffic to the ports on your cluster VM by following these steps:
    -  Go to VPC Network -> Firewall -> Select the rule that has following name:
@@ -59,12 +59,17 @@ until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for K
 
 
 8) Build container and push to GCR
-   - Update build.sh and then
-   - ./build.sh
-     - If you are Mac with ARM processor then the build.sh by default will build image for ARM architecture
-       The GKE cluster, by default create x86 worker nodes. There is mismatch in the processor architecture of the image.
-       This leads to "ErrImagePull" when you do "kubectl describe pod <pod-name> -n greetings1".
-       The way to solve this is to add "--platform=linux/x86" flag (verify this) to the "docker build": 
+
+   # Requirement 1.1
+   # Note that we do not need to connect Docker CLI on our host to the Docker daemon inside minikube (Why?)
+   docker build -t gcr.io/<gcp-project-id>/<uteid>-assignment4:latest .
+   docker push gcr.io/<gcp-project-id>/<uteid>-assignment4:latest
+
+   - FOR Mac with ARM processor:
+      The image default using above command will be for ARM architecture.
+      The GKE cluster, by default create x86 worker nodes. There is mismatch in the processor architecture of the image.
+      This leads to "ErrImagePull" when you do "kubectl describe pod <pod-name> -n greetings1".
+      The way to solve this is to add "--platform=linux/x86" flag (verify this) to the "docker build":
 
 9) Create the Greeting Kind:
    1. Update greetings-service-composition.yaml (see assignment requirements)
@@ -88,11 +93,11 @@ until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for K
     1. kubectl get greetings
     2. kubectl get ns
 
-14) Access metrics endpoint:
-    1. kubectl appmetrics show Greeting greetings1 default kubeplus-saas-provider.json
-    2. kubectl appmetrics show Greeting greetings2 default kubeplus-saas-provider.json
+14) Get the created resources using your plugin:
+    1. kubectl appshow Greeting greetings1
+    2. kubectl appshow Greeting greetings2
 
-15) Check and note the resources created by KubePlus:
+15) Verify the created resources using KubePlus's plugin:
     1. kubectl appresources Greeting greetings1 -k kubeplus-saas-provider.json
     2. kubectl appresources Greeting greetings2 -k kubeplus-saas-provider.json
 
@@ -104,7 +109,7 @@ until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for K
 
 APP URL:
 ---------
-Include your metrics endpint app url
+Include your app endpint app url here:
 
 
 NOTE:

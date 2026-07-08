@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if (( $# < 2 )); then
+  echo "kubectl appshow <kind> <instance>"
+  exit 0
+fi
+
+echo "TODO (see assignment requirements)"
+
+# Requirement 4.1
+# Take following inputs in order
+# kind
+# instance
+# 
+# Check if input instance exists or not for the provided kind
+# This can be done using: kubectl get <kind>
+# If the instance does not exist, return "Instance <instance> does not exist for Kind <kind>."
+#
+# If the instance exists, query the corresponding namespace to find out
+# Pods, Deployment, Configmap, ServiceAccount, NetworkPolicy
+
+
