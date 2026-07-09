@@ -109,3 +109,24 @@ Logging:
                 "timeFieldName": "@timestamp"
                 }
             }'
+
+
+Multi-team Multi-tenancy Experiment
+-------
+wget https://raw.githubusercontent.com/cloud-ark/kubeplus/master/requirements.txt
+wget https://raw.githubusercontent.com/cloud-ark/kubeplus/master/provider-kubeconfig.py
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+apiserver=`kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}’`
+kubectl create ns ns1; kubectl create ns ns2
+python3 provider-kubeconfig.py -s $apiserver -x minikube -c tenant1 -f tenant1.json create ns1
+python3 provider-kubeconfig.py -s $apiserver -x minikube -c tenant2 -f tenant2.json create ns2
+
+Experiment
+KUBECONFIG=tenant1.json kubectl create deployment nginx --image=nginx:latest -n ns1
+KUBECONFIG=tenant2.json kubectl create deployment nginx --image=nginx:latest -n ns2
+KUBECONFIG=tenant1.json kubectl get pods -n ns2
+KUBECONFIG=tenant1.json kubectl delete pod <podname> -n ns2
+
+kubectl auth can-i --list --as=system:serviceaccount:ns1:tenant1
