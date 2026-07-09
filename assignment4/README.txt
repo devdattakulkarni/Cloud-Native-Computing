@@ -67,9 +67,9 @@ until kubectl get pods -A | grep kubeplus | grep Running; do echo "Waiting for K
 
    - FOR Mac with ARM processor:
       The image default using above command will be for ARM architecture.
-      The GKE cluster, by default create x86 worker nodes. There is mismatch in the processor architecture of the image.
+      The GKE cluster, by default create x86_64 worker nodes. There is mismatch in the processor architecture of the image.
       This leads to "ErrImagePull" when you do "kubectl describe pod <pod-name> -n greetings1".
-      The way to solve this is to add "--platform=linux/x86" flag (verify this) to the "docker build":
+      The way to solve this is to add "--platform=linux/x86_64" flag (verify this) to the "docker build":
 
 9) Create the Greeting Kind:
    1. Update greetings-service-composition.yaml (see assignment requirements)
