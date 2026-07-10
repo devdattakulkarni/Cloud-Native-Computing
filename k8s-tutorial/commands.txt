@@ -113,20 +113,36 @@ Logging:
 
 Multi-team Multi-tenancy Experiment
 -------
+Cluster admin steps
+--------------------
 wget https://raw.githubusercontent.com/cloud-ark/kubeplus/master/requirements.txt
 wget https://raw.githubusercontent.com/cloud-ark/kubeplus/master/provider-kubeconfig.py
 python3 -m venv venv
 source venv/bin/activate
 pip3 install -r requirements.txt
-apiserver=`kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}’`
+apiserver=`kubectl config view --minify -o jsonpath='{.clusters[0].cluster.server}'`
+echo $apiserver
 kubectl create ns ns1; kubectl create ns ns2
 python3 provider-kubeconfig.py -s $apiserver -x minikube -c tenant1 -f tenant1.json create ns1
 python3 provider-kubeconfig.py -s $apiserver -x minikube -c tenant2 -f tenant2.json create ns2
 
 Experiment
+-----------
+Steps performed by the teams
+-----------------------------
 KUBECONFIG=tenant1.json kubectl create deployment nginx --image=nginx:latest -n ns1
+KUBECONFIG=tenant1.json kubectl run pod nginx --image=nginx:latest -n ns1
 KUBECONFIG=tenant2.json kubectl create deployment nginx --image=nginx:latest -n ns2
-KUBECONFIG=tenant1.json kubectl get pods -n ns2
-KUBECONFIG=tenant1.json kubectl delete pod <podname> -n ns2
+KUBECONFIG=tenant2.json kubectl create deployment nginx --image=nginx:latest -n ns1
+KUBECONFIG=tenant1.json kubectl get pods -n ns2 (may be okay)
+KUBECONFIG=tenant1.json kubectl delete pod <podname> -n ns2 (should be disallowed)
 
+Check permissions:
+-------------------
+1) What permissions does tenant1 service account have at cluster scope?
 kubectl auth can-i --list --as=system:serviceaccount:ns1:tenant1
+
+2) What permissions does tenant1 service account have in namespace tenant2?
+kubectl auth can-i --list --as=system:serviceaccount:ns1:tenant1 -n tenant2
+
+
