@@ -1,0 +1,12 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: local-qwen3-4b
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: qwen3:4b
+  apiKeySecret: kagent-local-llm
+  apiKeySecretKey: API_KEY
+  openAI:
+    baseUrl: "http://llama-server.ollama.svc.cluster.local:8080/v1"

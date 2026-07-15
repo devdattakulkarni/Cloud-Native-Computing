@@ -1,0 +1,58 @@
+# Remove old CPU-only cluster
+minikube delete
+
+# Install krunkit + vmnet-helper
+brew tap slp/krunkit && brew install krunkit
+krunkit --version
+curl -fsSL https://github.com/minikube-machine/vmnet-helper/releases/latest/download/install.sh | bash
+/opt/vmnet-helper/bin/vmnet-helper --version
+
+mkdir -p ~/models
+cd ~/models
+curl -LO 'https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-Q4_K_M.gguf?download=true'
+
+minikube start --driver krunkit --cpus 10 --memory 8192 --mount-string ~/models:/mnt/models
+
+minikube ssh -- tree /dev/dri
+
+kubectl apply -f generic-device-plugin.yaml
+kubectl get daemonset generic-device-plugin -n kube-system -w
+
+kubectl create ns ollama
+
+helm install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds \
+  --namespace kagent --create-namespace
+
+helm install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent \
+  --namespace kagent \
+  --set ui.service.type=ClusterIP
+
+kubectl -n ollama exec -it deploy/ollama -- ollama pull qwen3:4b
+kubectl -n ollama exec -it deploy/ollama -- ollama list
+
+kubectl create secret generic kagent-openai -n kagent --from-literal=OPENAI_API_KEY=not-needed
+
+kubectl create -f llama-server.yaml
+
+kubectl apply -f - <<EOF
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: default-model-config
+  namespace: kagent
+spec:
+  provider: OpenAI
+  model: qwen3:4b
+  apiKeySecret: kagent-openai
+  apiKeySecretKey: OPENAI_API_KEY
+  openAI:
+    baseUrl: "http://llama-server.ollama.svc.cluster.local:8080/v1"
+EOF
+
+kubectl get modelconfig -n kagent
+
+kubectl -n kagent get svc kagent-ui -o jsonpath='{.spec.ports[*].port}{"\n"}'
+
+kubectl -n kagent port-forward svc/kagent-ui 8080:<port-from-above>
+
+kubectl -n ollama logs -f deploy/llama-server
