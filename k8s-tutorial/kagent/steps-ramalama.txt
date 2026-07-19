@@ -7,18 +7,23 @@ krunkit --version
 curl -fsSL https://github.com/minikube-machine/vmnet-helper/releases/latest/download/install.sh | bash
 /opt/vmnet-helper/bin/vmnet-helper --version
 
+minikube start --driver krunkit --cpus 10 --memory 8192 --mount-string ~/models:/mnt/models
+
+kubectl create ns ollama
+kubectl apply -f generic-device-plugin.yaml
+kubectl get daemonset generic-device-plugin -n kube-system -w
+
+minikube ssh -- tree /dev/dri
+
+
+# Download model
 mkdir -p ~/models
 cd ~/models
 curl -LO 'https://huggingface.co/Qwen/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-Q4_K_M.gguf?download=true'
 
-minikube start --driver krunkit --cpus 10 --memory 8192 --mount-string ~/models:/mnt/models
 
-minikube ssh -- tree /dev/dri
 
-kubectl apply -f generic-device-plugin.yaml
-kubectl get daemonset generic-device-plugin -n kube-system -w
-
-kubectl create ns ollama
+# Install Kagent
 
 helm install kagent-crds oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds \
   --namespace kagent --create-namespace
@@ -27,8 +32,6 @@ helm install kagent oci://ghcr.io/kagent-dev/kagent/helm/kagent \
   --namespace kagent \
   --set ui.service.type=ClusterIP
 
-kubectl -n ollama exec -it deploy/ollama -- ollama pull qwen3:4b
-kubectl -n ollama exec -it deploy/ollama -- ollama list
 
 kubectl create secret generic kagent-openai -n kagent --from-literal=OPENAI_API_KEY=not-needed
 
@@ -55,4 +58,25 @@ kubectl -n kagent get svc kagent-ui -o jsonpath='{.spec.ports[*].port}{"\n"}'
 
 kubectl -n kagent port-forward svc/kagent-ui 8080:<port-from-above>
 
+kubectl -n ollama exec -it deploy/llama-server -- ollama list
+
 kubectl -n ollama logs -f deploy/llama-server
+
+
+Build and deploy MCP server:
+----------------------------
+
+Linux/MacOS:
+    eval $(minikube docker-env)
+
+Windows (Powershell):
+    minikube docker-env --shell powershell | Invoke-Expression
+
+docker build -t kubeplus-mcp:latest .
+
+kubectl create secret generic kubeplus-mcp-kubeconfig --from-file=kubeplus-saas-provider.json -n kagent
+
+kubectl apply -f mcpdeployment.yaml -n kagent
+
+
+
