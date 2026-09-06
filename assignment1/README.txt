@@ -14,7 +14,7 @@ Run container:
 # Make the following changes in the docker run command:
 # 1. Update the port
 # 2. Volume mount the current folder on the host to the folder "/hostfolder"
-# 3. Pass the GREETING env var with value "Spring was earlier."
+# 3. Pass the GREETING env var with value "Summer was earlier."
 # 4. Pass your image tag from the build section above
 # 5. Map host port 5000 to container port 5001
 
